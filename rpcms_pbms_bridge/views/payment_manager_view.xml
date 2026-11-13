@@ -7,6 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='locale']" position="after">
                 <field name="rpcms_progres_mode" />
+                <field name="rpcms_bridge_api" />
+                <field name="rpcms_sender_app_url" invisible="rpcms_bridge_api != 'partner_api'" />
+                <field name="rpcms_benefit_program_id" invisible="rpcms_bridge_api != 'partner_api'" />
+                <field name="rpcms_benefit_code_id" invisible="rpcms_bridge_api != 'partner_api'" />
+                <field name="rpcms_benefit_code_mnemonic" invisible="rpcms_bridge_api != 'partner_api'" />
+                <field name="rpcms_target_registry" invisible="rpcms_bridge_api != 'partner_api'" />
+                <field name="rpcms_disbursement_frequency" invisible="rpcms_bridge_api != 'partner_api'" />
             </xpath>
         </field>
     </record>

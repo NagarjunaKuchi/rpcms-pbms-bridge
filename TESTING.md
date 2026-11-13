@@ -1,8 +1,10 @@
 # Running this addon against a real Odoo database
 
 This is how the addon was verified on 2026-11-13 (Linux sandbox, PostgreSQL 16, Python 3.11, no Docker).
-Result: the addon installs cleanly on top of `g2p_payment_g2p_connect` and its 8 Odoo tests pass
-(`0 failed, 0 error(s) of 8 tests`). Re-introducing the hardcoded `"SEP"` makes 2 of them fail.
+Result: the addon installs cleanly on top of `g2p_payment_g2p_connect` and its 22 Odoo tests pass
+(`0 failed, 0 error(s) of 22 tests`: 8 for ProGres mode, 14 for the Bridge Partner API mode). Re-introducing the hardcoded `"SEP"` makes tests fail in both groups; signing unsorted JSON, marking rejected payments as sent, and auto-resending after an unknown outcome were each tried and each makes at least one test fail.
+
+The pure tests (`pytest tests`) also run without Odoo. `tests/test_bridge_api_contract.py` additionally needs the Bridge models package (`pip install -e <g2p-bridge>/core/models "sqlalchemy[asyncio]"` in a separate venv) and is skipped without it.
 
 ## Environment
 - **Odoo 17.0 nightly** `17.0-20261021` from `nightly.odoo.com` (source tarball), Python 3.11 venv.
