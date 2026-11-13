@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_payment_manager_g2p_connect_form_rpcms" model="ir.ui.view">
+        <field name="name">view_payment_manager_g2p_connect_form_rpcms</field>
+        <field name="model">g2p.program.payment.manager.g2p.connect</field>
+        <field name="inherit_id" ref="g2p_payment_g2p_connect.view_payment_manager_g2p_connect_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='locale']" position="after">
+                <field name="rpcms_progres_mode" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
