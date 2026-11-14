@@ -25,3 +25,18 @@ scripts/run_odoo.sh -d rpcms_test -i rpcms_pbms_bridge
 scripts/run_odoo.sh -d rpcms_test -u rpcms_pbms_bridge --test-enable --test-tags /rpcms_pbms_bridge --log-level=test
 ```
 Note: upstream `g2p_payment_g2p_connect/tests/__init__.py` has its test import commented out, so there is no upstream suite to run.
+
+
+## Rebuilding the environment on another machine (tested 2026-11-14)
+`scripts/odoo17_tested_requirements.txt` is the exact package set (117 packages, Python 3.11) that passed the 22 tests in a **fresh** virtual environment. It is a `pip freeze` of the working environment, minus `fastapi-openapi-overrides` (it demands a newer fastapi than the 0.110.3 the OCA `fastapi` module needs; nothing here uses it) and minus Odoo itself.
+
+```bash
+uv venv ~/odoo/venv --python 3.11 && . ~/odoo/venv/bin/activate
+uv pip install -r scripts/odoo17_tested_requirements.txt
+# OCA modules that are not in the cloned repos (versions that were tested):
+uv pip install --no-deps --target /tmp/oca "odoo-addon-component==17.0.1.0.1" "odoo-addon-endpoint_route_handler==17.0.1.0.3" "odoo-addon-password_security==17.0.2.0.2" "odoo-addon-server_environment==17.0.1.2.6"
+mkdir -p ~/odoo/extra && cp -r /tmp/oca/odoo/addons/* ~/odoo/extra/
+```
+Add `~/odoo/extra` to `--addons-path`. `psycopg2` builds from source, so `libpq-dev` and a compiler must be installed.
+
+What this was and was not checked against: Odoo came from the 17.0 nightly source package run with `python -m odoo` (a `git clone` of `odoo/odoo` 17.0 uses `./odoo-bin` instead and was **not** tested), PostgreSQL **16**. Other PostgreSQL versions (e.g. 12), other Linux distributions and a fresh `git clone` of Odoo are untested.
