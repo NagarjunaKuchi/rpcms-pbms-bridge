@@ -39,4 +39,10 @@ mkdir -p ~/odoo/extra && cp -r /tmp/oca/odoo/addons/* ~/odoo/extra/
 ```
 Add `~/odoo/extra` to `--addons-path`. `psycopg2` builds from source, so `libpq-dev` and a compiler must be installed.
 
-What this was and was not checked against: Odoo came from the 17.0 nightly source package run with `python -m odoo` (a `git clone` of `odoo/odoo` 17.0 uses `./odoo-bin` instead and was **not** tested), PostgreSQL **16**. Other PostgreSQL versions (e.g. 12), other Linux distributions and a fresh `git clone` of Odoo are untested.
+Checked in two environments:
+1. **Sandbox (2026-11-14):** Odoo 17.0 nightly source package run with `python -m odoo`, PostgreSQL 16, Python 3.11. 22 of 22 tests pass.
+2. **Second machine, run by the user (2026-11-14, output pasted to me, not run by me):** Ubuntu 20.04.2, **PostgreSQL 12.22** in its own cluster on port 5433, Odoo from a `git clone --depth 1 --branch 17.0 odoo/odoo` started with `odoo-bin`, Python 3.11 from `uv`. Result reported: `0 failed, 0 error(s) of 22 tests`.
+
+**With a git clone of Odoo, `--addons-path` must include `odoo/addons` (the clone's own `addons/` folder), in addition to the OpenG2P and OCA folders.** `--addons-path` replaces the default, and without it the install fails with `No module named 'odoo.addons.web'` and a `ParseError` in `base/data/ir_module_module.xml`. The nightly package does not need this because all modules sit in one folder.
+
+Still untested: Python versions other than 3.11, other Linux distributions, Odoo releases other than the two above, and PostgreSQL 13-15.
