@@ -26,3 +26,8 @@ It proves this addon builds, signs, sends and reads the Bridge request shapes co
 - Dev signer: Odoo tests, `--test-tags /rpcms_dev_signer` (4 tests).
 - Verified 2026-11-14 in the sandbox: demo flow all steps PASS; with a mock configured with the wrong public key the same flow fails at the first call.
 - Second machine (user-reported 2026-11-14, output pasted to me, not run by me): Ubuntu 20.04, PostgreSQL 12, git-cloned Odoo 17.0, Python 3.11. Dev signer installed with no errors; demo flow: 8 of 8 steps PASS, with the mock checking signatures against the dev signer's public key.
+
+## Use case walkthrough
+
+`seed_usecase.py` (Odoo shell) and `usecase_scenario.py` (HTTP) play the RPCMS story with invented households. See
+[USECASE.md](USECASE.md).
