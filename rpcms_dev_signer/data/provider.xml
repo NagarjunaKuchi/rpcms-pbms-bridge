@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="provider_dev_signer" model="g2p.encryption.provider">
+        <field name="name">RPCMS dev signer (local key, NOT SECURE)</field>
+        <field name="type">rpcms_dev_rsa</field>
+    </record>
+</odoo>
