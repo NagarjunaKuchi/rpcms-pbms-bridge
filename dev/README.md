@@ -29,5 +29,5 @@ It proves this addon builds, signs, sends and reads the Bridge request shapes co
 
 ## Use case walkthrough
 
-`seed_usecase.py` (Odoo shell) and `usecase_scenario.py` (HTTP) play the RPCMS story with invented households. See
-[USECASE.md](USECASE.md).
+`usecase_demo.py` plays the stakeholder demo screen by screen against the dev services. `seed_usecase.py` and
+`usecase_scenario.py` are an optional payment-side rehearsal. See [USECASE.md](USECASE.md).

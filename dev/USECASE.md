@@ -1,5 +1,40 @@
 # RPCMS use case walkthrough (development only, invented data)
 
+The use case is the stakeholder demo `RPCMS-Refugee-Coordination-Demo_2_2.html`: one partner (Nile Hope Uganda) and one refugee
+(Mary Poni, ProGres ID `UGA-00423318`) through a season in Bidibidi. **RPCMS records and tracks assistance; it does not make
+payments** (the demo says so), so Odoo and the payment bridge are not part of it.
+
+## Run it
+
+```
+source ~/rpcms/secrets.sh
+~/rpcms/venv/bin/python dev/usecase_demo.py [--suffix r1]
+```
+Needs the five services, `rpcms-sync-worker` and `rpcms-compliance-worker` running. One-shot per database (use `--suffix` to rehearse).
+
+| Demo screen | What the script does against the real dev services | Covered? |
+|---|---|---|
+| 0 Scene | narrative only | - |
+| 1 Partner compliance | URSB + NGO Bureau + AMP record check for Nile Hope (80020003318742, NGO/PMT/2025/4418) | Yes (mocks). Not covered: permit-area check, open-issue check, 60-day expiry alert |
+| 2 UGPass e-MoU | MoU OPM/DoR/NHU/2026/014; 3 signatories in order (Achan, Okello, Mugisha) approved via signed callbacks; 2 e-Seals; public verification; tamper = different hash fails | Workflow yes. Not covered: real ECDSA signatures and QR contents, UGPass certificates |
+| 3 Project, AMP, map | reads AMP-UG-2026-00731 | Partly: donor name, Q1 amount, 1,800 households, GIS map, overlap warning are not in any service |
+| 4 ProGres v4 auth | Mary UGA-00423318 authenticates YES; response has only the four allowed fields; a non-matching capture is NO | Yes (mock) |
+| 5 Double dipping | WNRP's 02 Mar record for UGA-00419907 (DST-WNRP-0302-0188); Mary clear; UGA-00419907 flagged with a referral | Yes |
+| 6 Handover and sync | 214 offline records (Mary's is DST-NHU-0305-00214) in one batch; 3 become CONFLICT, 211 SYNCED; Mary then visible to other partners | Yes. Demo wording on value (UGX 32.1M vs 3 duplicates) is ambiguous; see script note |
+| 7 Online services / ID renewal | only the ProGres authentication at the service centre | **No** service for expiry flag, appointment, SMS |
+| 8 Self-reliance survey | nothing | **No** service |
+| 9 Dashboard, AMP, NIMES | expenditure report to AMP and three indicators to NIMES, both reach ACCEPTED | Submissions yes; dashboard figures are the demo's illustration, no dashboard exists. NIMES indicator codes are invented |
+| 10 Outcome | summary | - |
+
+Everything upstream (ProGres, UGPass, URSB, NGO Bureau, AMP, NIMES) is a development mock.
+
+---
+
+# Appendix: payment-side rehearsal (NOT part of the demo use case)
+
+`seed_usecase.py` and `usecase_scenario.py` rehearse Odoo/OpenG2P paying households through the PBMS bridge. The demo
+says RPCMS does not make payments, so this is an optional extra for the bridge adapter only.
+
 **Story.** Eight refugee households in Bidibidi are identified by a (fake) UNHCR ProGres ID, `UGA-DEV-0001` … `0008`.
 Partner **A (WFP-DEV)** pays them cash through OpenG2P (Odoo) and the Bridge. Partner **B (DRC-DEV)** then tries to assist some of
 the same households in the same cycle - online and from an offline tablet. The Duplicate Guard must catch this and turn it into
